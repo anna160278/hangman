@@ -36,6 +36,7 @@ words = ["КАРАНДАШ", "СОБАКА", "ЗЕМЛЯ", "КОМПЬЮТЕР",
          "СЛОВО", "КОШКА", "ИЗОБРЕТЕНИЕ", "ПРАЗДНИК", "ШКОЛА", "ЯБЛОКО", "АПЕЛЬСИН", "ПОДАРОК", "ШОКОЛАД"]
 word = random.choice(words)
 guessed = []
+run = True
 
 # colors
 WHITE = (255, 255, 255)
@@ -83,12 +84,22 @@ def display_message(message):
     pygame.time.delay(2000)
 
 
+def restart():
+    global hangman_status, guessed, word, run
+    hangman_status = 0
+    guessed = []
+    word = random.choice(words)
+    run = True
+    for letter in letters:
+        letter[3] = True
+
+
 def main():
-    global hangman_status
+    global hangman_status, run
 
     FPS = 60
     clock = pygame.time.Clock()
-    run = True
+    # run = True
 
     while run:
         clock.tick(FPS)
@@ -96,7 +107,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                # sys.exit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    print("R")
+                    restart()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 m_x, m_y = pygame.mouse.get_pos()
                 for letter in letters:
@@ -119,14 +135,16 @@ def main():
 
         if won:
             display_message("Ты выиграл!")
+            display_message('Сыграем ещё? Нажми R')
             break
 
         if hangman_status == 6:
             display_message("Ты проиграл!")
             display_message(f"загаданное слово: {word}")
+            display_message('Сыграем ещё? Нажми R')
             break
 
 
 while True:
     main()
-    sys.exit()
+    # sys.exit()
